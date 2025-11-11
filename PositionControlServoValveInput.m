@@ -1,9 +1,4 @@
-% =========================================================================
-%  PositionControlServoValve_init.m  –  MODIFIED  (assertion-free)
-%  MathWorks example  –  only hydraulic initial-conditions changed
-% =========================================================================
-
-% ---------- 1.  ORIGINAL PARAMETERS  (UNCHANGED)  -----------------------
+%  ORIGINAL PARAMETERS  
 % Valve body
 dampCoeff         = 1e-1;                  % (N-s/m) Damping coefficient
 springCoeff       = 1e4;                   % (N/m) Spring coefficient
@@ -43,30 +38,14 @@ motorI            = 10;                    % (mH) Motor inductance
 motorDampCoeff    = 1e-3;                  % (N-s/m) Damping coefficient
 torsionStiffness  = 3;                     % (N*m/rad) Motor torsion spring stiffness
 
-% ... (everything above stays the same) ...
 
-% Controllers' gains  (PID originals – not used once you swap in SDRE)
-kpp = 160;  kpi = 600;
-kvp = 200;  kvi = 10;
-kip = 0.004; kii = 0.002;
+% APPLYING THE PARAMETERS TO SIMULINK BLOCKS 
 
-% =========================================================================
-%  2.  EXTRA SETTINGS THAT REMOVE THE ASSERTIONS
-% =========================================================================
 
-% =========================================================================
-%  3.  APPLY THE PARAMETERS TO SIMULINK BLOCKS  (renumbered from 2)
-% =========================================================================
-
-% --- 3-A: Reservoir (tank) pressure ---
 set_param('PositionControlServoValve/Position Control Servo Valve/Reservoir',...
           'p_tank', '0.1e6');
-
-% --- 3-B: Global Minimum Valid Pressure ---
 ssc_domain('PositionControlServoValve','isothermal_liquid',...
            'MinimumValidPressure', 0.5e6);
-
-% --- 3-C: Initialize ALL hydraulic volumes ---
 set_param('PositionControlServoValve/Actuator/Actuator Cylinder',...
           'p_A_initial', '21e6', 'p_B_initial', '21e6');
 set_param('PositionControlServoValve/Position Control Servo Valve/Valve Body/Spool Side A',...
@@ -74,9 +53,9 @@ set_param('PositionControlServoValve/Position Control Servo Valve/Valve Body/Spo
 set_param('PositionControlServoValve/Position Control Servo Valve/Valve Body/Spool Side B',...
           'p_initial', '21e6');
 
-% =========================================================================
-%  4.  SOLVER SETTINGS (renumbered from 3)
-% =========================================================================
+
+%  SOLVER SETTINGS 
+
 set_param('PositionControlServoValve/Solver Configuration',...
           'SolverType', 'BackwardEuler',...
           'RelTol', '1e-6',...
@@ -84,8 +63,7 @@ set_param('PositionControlServoValve/Solver Configuration',...
           'MaxStep', '1e-4',...
           'MinStep', '1e-9');
 
-% =========================================================================
-%  5.  SDRE CONTROLLER GAIN (renumbered from 4, duplicate removed)
-% =========================================================================
+%  5.  SDRE CONTROLLER GAIN 
+
 K_SDRE = [2.0954e3  44.721  3.863e-3];
 assignin('base','K_SDRE',K_SDRE);
